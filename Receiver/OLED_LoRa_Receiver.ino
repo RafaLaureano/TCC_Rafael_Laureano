@@ -1,34 +1,10 @@
-/*
-  This is a simple example show the Heltec.LoRa recived data in OLED.
-
-  The onboard OLED display is SSD1306 driver and I2C interface. In order to make the
-  OLED correctly operation, you should output a high-low-high(1-0-1) signal by soft-
-  ware to OLED's reset pin, the low-level signal at least 5ms.
-
-  OLED pins to ESP32 GPIOs via this connecthin:
-  OLED_SDA -- GPIO4
-  OLED_SCL -- GPIO15
-  OLED_RST -- GPIO16
-  
-  by Aaron.Lee from HelTec AutoMation, ChengDu, China
-  成都惠利特自动化科技有限公司
-  www.heltec.cn
-  
-  this project also realess in GitHub:
-  https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series
-*/
 #include "heltec.h" 
 #include "images.h"
 
-#define BAND    433E6  //you can set band here directly,e.g. 868E6,915E6
+#define BAND 433E6  //you can set band here directly,e.g. 868E6,915E6
 String rssi = "RSSI --";
 String packSize = "--";
 String packet ;
-//String result;
-int A =  -25.378; //RSSI in 1m 
-int n = 2; // Environment factor
-float distance;
-float pot;
 
 void logo(){
   Heltec.display->clear();
@@ -43,7 +19,6 @@ void LoRaData(){
   Heltec.display->drawString(0 , 15 , "Received "+ packSize + " bytes");
   Heltec.display->drawStringMaxWidth(0 , 26 , 128, packet);
   Heltec.display->drawString(0, 0, rssi);
-  //Heltec.display->drawString(0,45, String(distance,DEC));  
   Heltec.display->display();
 }
 
@@ -53,18 +28,7 @@ void cbk(int packetSize) {
   for (int i = 0; i < packetSize; i++) { packet += (char) LoRa.read(); }
   rssi = "RSSI " + String(LoRa.packetRssi(), DEC) ;
 
-  //Free-space model
-//  
-//  pot = ((A-(float)LoRa.packetRssi())/(10*n));
-//  distance = pow(10,pot);
-//  //result = String(distance,DEC);
   Serial.println ("D" + (String)LoRa.packetRssi());
-  //Serial.println ("M" + String(distance,DEC));
-  //Serial.println (distance); 
-
-  //ground reflection (2-ray) model
-
-   
   LoRaData();
 }
 
@@ -83,7 +47,6 @@ void setup() {
   Heltec.display->drawString(0, 10, "Wait for incoming data...");
   Heltec.display->display();
   delay(1000);
-  //LoRa.onReceive(cbk);
   LoRa.receive();
 }
 
