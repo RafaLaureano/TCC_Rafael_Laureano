@@ -6,7 +6,7 @@ close all;
 frequency = 433; 
 
 % Define lambda
-c = 299792458
+c = 299792.458
 lambda = c/frequency
 
 d = (0:1:100)
@@ -43,14 +43,15 @@ a = 3.2*(log10(11.75*h_node)^2)-4.97;
 pl_okumura_hata = -(69.55 + 26.16*log10(frequency)-13.82*log10(h_send)-a+(44.9-6.55*log10(h_send))*log10(d/1000));
 
 
-% 2-ray (region 2)
-up = 3*3*(lambda)^2
-down = (d*4*pi).^2
-pl_2_ray = up./down
+% % 2-ray (region 2)
+% up = 3*3*(lambda)^2
+% down = (4*pi*d).^2
+% pl_2_ray = up./down
 
 
 % figure; 
 plot(d,pl_free_space,d,pl_regression_coefficient,d,pl_okumura_hata);
+% plot(d,pl_free_space,d,pl_regression_coefficient,d,pl_okumura_hata,d,pl_2_ray);
 
 hold;
 
