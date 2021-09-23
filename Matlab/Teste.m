@@ -1,4 +1,1 @@
-p
-
-f=fitlm(x,y)
-plot () 
+p = pi
