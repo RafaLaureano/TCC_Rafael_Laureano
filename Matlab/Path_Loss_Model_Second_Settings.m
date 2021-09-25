@@ -1,21 +1,21 @@
-% Comparison of Path Loss Models for LoRA 
+% Comparison of Path Loss Models for LoRA in second setting
 clear;
 close all;
 
 % LoRA frequency in MHz
 frequency = 433; 
 
-% Define wave length
+% Calc wave length
 c = 299792.458;
 lambda = c/frequency;
 
 % Set antena height in meters
-h_sender = 0.077;
-h_receiver = 0.069;
+h_sender = 0.797;
+h_receiver = 0.769;
 
 
 % Read datatable
-data_RSSI = readtable('cenario 2.csv');
+data_RSSI = readtable('Cenario 2.csv');
 
 % Set vector of distances
 distance = [1 2 4 6 8 10 12 14 16 18 20 30 40 50 60 70 80 90 100];
@@ -49,18 +49,20 @@ PL_OKUMURA_SUB_URBAN = LU - 2*(log10(frequency))^2 - 5.4
 
 
 % 2-ray (region 2)
+pl = 1;
+PL_2_RAY=zeros(1,length(distance))
+dc=4*h_sender*h_receiver/lambda;
 
-
-
-
-% PLOT CURVES
-scatter(distance,RSSI_mean);
-legend('Measured');
-hold on;
-plot(distance,PL_FREE,distance,PL_REG_COEF,distance,LU,distance,PL_FITTING);
-legend('Measured','Free Space','Regression Coefficient','Okumura-Hata','Linear Regression');
-
-
+for i=1:length(distance)
+    if (distance(i)<h_sender)
+        PL_2_RAY (i) = -log10((((4*pi)^2)*pl*((distance(i))^2 + (h_sender/1000)^2))/(3*3*lambda^2));
+    elseif (distance(i)<=dc)
+        PL_2_RAY (i) = -log10((((4*pi)^2)*pl*((distance(i))^2))/(3*3*lambda^2));
+    else
+        PL_2_RAY (i) = -log10(((distance(i))^4)*pl/(3*3*lambda^2*(h_sender/1000)^2*(h_receiver/1000)^2));
+    end
+end
+    
 
 % calc accuracy
 
@@ -77,7 +79,7 @@ for i=1:length(distance)
     dif_free(i) = sqrt((RSSI_mean(i) - PL_FREE(i))^2);
     dif_rc(i) = sqrt((RSSI_mean(i) - PL_REG_COEF(i))^2);
     dif_fitting(i) = sqrt((RSSI_mean(i) - PL_FITTING(i))^2);
-%     dif_2r(i) = sqrt((RSSI_mean(i) - pl_2_ray(i))^2);
+    dif_2r(i) = sqrt((RSSI_mean(i) - PL_2_RAY(i))^2);
     dif_ok(i) = sqrt((RSSI_mean(i) - LU(i))^2);
 end
 
@@ -86,16 +88,18 @@ end
 acc_free = std(dif_free);
 acc_rc = std(dif_rc);
 acc_fitting = std(dif_fitting);
-% acc_2r = std(dif_2r);
+acc_2r = std(dif_2r);
 acc_ok = std(dif_ok);
 
 
 %Making accuracy vector 
-acc = [acc_free acc_rc acc_fitting acc_ok];
+acc = [acc_free acc_rc acc_fitting acc_ok acc_2r];
 hold;
 
-%Plot bar graph with accuracy vector
-x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata'});
+%Plot graphs
+figure(1);
+subplot(1,2,2);
+x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
 b = bar(x,acc,'FaceColor','flat');
 
 xtips1 = b(1).XEndPoints;
@@ -106,5 +110,19 @@ text(xtips1,ytips1,labels1,'HorizontalAlignment','center',...
 
 b.CData(1,:) = [0 0 1];
 b.CData(2,:) = [0 1 0];
-b.CData(3,:) = [0 1 1];
-b.CData(4,:) = [1 0 0];
+b.CData(3,:) = [1 0 0];
+b.CData(4,:) = [1 1 0];
+b.CData(5,:) = [1 0 1];
+
+title('Accuracy');
+ylabel('Standard deviation');
+
+subplot(1,2,1);
+scatter(distance,RSSI_mean);
+legend('Measured');
+hold on;
+plot(distance,PL_FREE,'g',distance,PL_REG_COEF,'m',distance,LU,'y',distance,PL_2_RAY,'b',distance,PL_FITTING,'r');
+legend('Measured','Free Space','Regression Coefficient','Okumura-Hata','2-Ray','Linear Regression');
+title('Curves');
+ylabel('RSSI');
+xlabel('Distance in Meters');
