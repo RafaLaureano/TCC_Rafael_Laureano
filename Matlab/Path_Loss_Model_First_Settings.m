@@ -70,7 +70,7 @@ end
 dif_free = zeros(1,length(distance));
 dif_rc = zeros(1,length(distance));
 dif_fitting = zeros(1,length(distance));
-% dif_2r = zeros(1,length(d_RSSI));
+dif_2r = zeros(1,length(distance));
 dif_ok = zeros(1,length(distance));
 
 
