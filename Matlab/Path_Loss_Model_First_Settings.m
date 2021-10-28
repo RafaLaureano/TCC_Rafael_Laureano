@@ -21,10 +21,12 @@ data_RSSI = readtable('Cenario 1.csv');
 distance = [1 3 5 7 9 11 13 15 17 19];
 
 % Calculates means 
-RSSI_mean = zeros(1,length(distance));
-for i = 1:length(distance)
-    RSSI_mean(i) = mean(data_RSSI{:,i},'omitnan');
-end
+% RSSI_mean = zeros(1,length(distance));
+% for i = 1:length(distance)
+%     RSSI_mean(i) = mean(data_RSSI{:,i},'all');
+% end
+
+RSSI_mean = mean(data_RSSI);
 scatter(distance,RSSI_mean);
 legend('RSSI');
 
@@ -84,6 +86,16 @@ for i=1:length(distance)
 end
 
 
+%Getting mean error
+mean_free = mean(dif_free);
+mean_rc = mean(dif_rc);
+mean_fitting = mean(dif_fitting);
+mean_2r = mean(dif_2r);
+mean_ok = mean(dif_ok);
+
+mean = [mean_free mean_rc mean_fitting mean_ok mean_2r];
+hold;
+
 %Getting Standard Deviation
 acc_free = std(dif_free);
 acc_rc = std(dif_rc);
@@ -98,7 +110,7 @@ hold;
 
 %Plot graphs
 figure(1);
-subplot(1,2,2);
+subplot(2,2,2);
 x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
 b = bar(x,acc,'FaceColor','flat');
 
@@ -117,7 +129,7 @@ b.CData(5,:) = [1 0 1];
 title('Accuracy');
 ylabel('Standard deviation');
 
-subplot(1,2,1);
+subplot(2,2,1);
 scatter(distance,RSSI_mean);
 legend('Measured');
 hold on;
@@ -126,3 +138,23 @@ legend('Measured','Free Space','Regression Coefficient','Okumura-Hata','2-Ray','
 title('Curves');
 ylabel('RSSI');
 xlabel('Distance in Meters');
+
+subplot(2,2,3);
+x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
+b = bar(x,mean,'FaceColor','flat');
+
+xtips1 = b(1).XEndPoints;
+ytips1 = b(1).YEndPoints;
+labels1 = string(b(1).YData);
+text(xtips1,ytips1,labels1,'HorizontalAlignment','center',...
+    'VerticalAlignment','bottom')
+
+b.CData(1,:) = [0 0 1];
+b.CData(2,:) = [0 1 0];
+b.CData(3,:) = [1 0 0];
+b.CData(4,:) = [1 1 0];
+b.CData(5,:) = [1 0 1];
+
+subplot(2,2,4);
+
+% boxplot(data_RSSI);
