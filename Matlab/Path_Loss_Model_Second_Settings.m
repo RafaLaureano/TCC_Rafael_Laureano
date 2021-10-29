@@ -154,12 +154,12 @@ b.CData(5,:) = [1 0 1];
 
 subplot(2,2,4);
 
-tamanho = size(data_RSSI);
-vetor = zeros(193,19);
-for i = 1:19
-    for j = 1:193
-        vetor(j,i) = data_RSSI{j,i};
+figure;
+vetor_box_plot = zeros(size(data_RSSI));
+for i = 1:size(data_RSSI,2)
+    for j = 1:size(data_RSSI,1)
+        vetor_box_plot(j,i) = data_RSSI{j,i};
     end
 end
 
-bp = boxplot(vetor);
+bp = boxplot(vetor_box_plot);

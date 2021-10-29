@@ -21,12 +21,10 @@ data_RSSI = readtable('Cenario 1.csv');
 distance = [1 3 5 7 9 11 13 15 17 19];
 
 % Calculates means 
-% RSSI_mean = zeros(1,length(distance));
-% for i = 1:length(distance)
-%     RSSI_mean(i) = mean(data_RSSI{:,i},'all');
-% end
-
-RSSI_mean = mean(data_RSSI);
+RSSI_mean = zeros(1,length(distance));
+for i = 1:length(distance)
+    RSSI_mean(i) = mean(data_RSSI{:,i},'omitnan');
+end
 scatter(distance,RSSI_mean);
 legend('RSSI');
 
@@ -158,3 +156,12 @@ b.CData(5,:) = [1 0 1];
 subplot(2,2,4);
 
 % boxplot(data_RSSI);
+figure;
+vetor_box_plot = zeros(size(data_RSSI));
+for i = 1:size(data_RSSI,2)
+    for j = 1:size(data_RSSI,1)
+        vetor_box_plot(j,i) = data_RSSI{j,i};
+    end
+end
+
+bp = boxplot(vetor_box_plot);
