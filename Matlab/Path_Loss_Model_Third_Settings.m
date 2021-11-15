@@ -108,8 +108,21 @@ acc = [acc_free acc_rc acc_fitting acc_ok acc_2r];
 hold;
 
 %Plot graphs
+%Curves
 figure(1);
-subplot(2,2,2);
+scatter(distance,RSSI_mean);
+legend('Measured');
+hold on;
+plot(distance,PL_FREE,'g',distance,PL_REG_COEF,'m',distance,LU,'y',distance,PL_2_RAY,'b',distance,PL_FITTING,'r');
+legend('Measured','Free Space','Regression Coefficient','Okumura-Hata','2-Ray','Linear Regression');
+title('Curves');
+ylabel('RSSI');
+xlabel('Distance in Meters');
+
+saveas(figure(1),'Curvas_Third_Settings.jpg');
+
+%Accuracy
+figure(2);
 x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
 b = bar(x,acc,'FaceColor','flat');
 
@@ -128,17 +141,10 @@ b.CData(5,:) = [1 0 1];
 title('Accuracy');
 ylabel('Standard deviation');
 
-subplot(2,2,1);
-scatter(distance,RSSI_mean);
-legend('Measured');
-hold on;
-plot(distance,PL_FREE,'g',distance,PL_REG_COEF,'m',distance,LU,'y',distance,PL_2_RAY,'b',distance,PL_FITTING,'r');
-legend('Measured','Free Space','Regression Coefficient','Okumura-Hata','2-Ray','Linear Regression');
-title('Curves');
-ylabel('RSSI');
-xlabel('Distance in Meters');
+saveas(figure(2),'Precisão_Third_Settings.jpg');
 
-subplot(2,2,3);
+%Average Difference
+figure(3);
 x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
 b = bar(x,mean,'FaceColor','flat');
 
@@ -154,9 +160,13 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-subplot(2,2,4);
+title('Average Differenc');
+ylabel('Average Differenc');
 
-figure;
+saveas(figure(3),'Diferença_Media_Third_Settings.jpg');
+
+%Boxplot;
+figure(4);
 vetor_box_plot = zeros(size(data_RSSI));
 for i = 1:size(data_RSSI,2)
     for j = 1:size(data_RSSI,1)
@@ -165,3 +175,5 @@ for i = 1:size(data_RSSI,2)
 end
 
 bp = boxplot(vetor_box_plot);
+
+saveas(figure(4),'Boxplot_Third_Settings.jpg');
