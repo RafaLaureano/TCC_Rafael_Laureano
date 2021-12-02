@@ -1,95 +1,58 @@
-/*
-  This is a simple example show the Heltec.LoRa sended data in OLED.
-
-  The onboard OLED display is SSD1306 driver and I2C interface. In order to make the
-  OLED correctly operation, you should output a high-low-high(1-0-1) signal by soft-
-  ware to OLED's reset pin, the low-level signal at least 5ms.
-
-  OLED pins to ESP32 GPIOs via this connecthin:
-  OLED_SDA -- GPIO4
-  OLED_SCL -- GPIO15
-  OLED_RST -- GPIO16
-  
-  by Aaron.Lee from HelTec AutoMation, ChengDu, China
-  成都惠利特自动化科技有限公司
-  https://heltec.org
-  
-  this project also realess in GitHub:
-  https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series
-*/
+//SENDER
 
 #include "heltec.h"
 #include "images.h"
 
-#define BAND 433E6  //you can set band here directly,e.g. 868E6,915E6
+#define BAND 433E6  //define a frequencia de banda da transmissão LoRa
 
-unsigned int counter = 0;
-String rssi = "RSSI --";
-String packSize = "--";
-String packet;
-
-void logo()
-{
-  Heltec.display->clear();
-  Heltec.display->drawXbm(0,5,logo_width,logo_height,logo_bits);
-  Heltec.display->display();
-}
+unsigned int counter = 0; //inicia o contador como 0
 
 void setup()
 {
-   //WIFI Kit series V1 not support Vext control
   Heltec.begin(true /*DisplayEnable Enable*/, true /*Heltec.Heltec.Heltec.LoRa Disable*/, true /*Serial Enable*/, true /*PABOOST Enable*/, BAND /*long BAND*/);
- 
+
+  //config do display 
   Heltec.display->init();
   Heltec.display->flipScreenVertically();  
   Heltec.display->setFont(ArialMT_Plain_10);
-  logo();
-  delay(50);
-  Heltec.display->clear();
   
-  Heltec.display->drawString(0, 0, "Heltec.LoRa Initial success!");
+  Heltec.display->drawString(0, 0, "Heltec.LoRa Initial success!");//Mensagem de inicialização
   Heltec.display->display();
   delay(50);
 
-  LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
+  LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);//define a potencia de transmissão em 14 dB
+
+  Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
+  Heltec.display->setFont(ArialMT_Plain_10);
 }
 
 void loop()
 {
-  Heltec.display->clear();
-  Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
-  Heltec.display->setFont(ArialMT_Plain_10);
-  
+  Heltec.display->clear();//Limpa display
+
   Heltec.display->drawString(0, 0, "Sending packet: ");
   Heltec.display->drawString(90, 0, String(counter));
-  Heltec.display->display();
+  Heltec.display->display();//Escreve qual pacote está sendo enviado no momento
 
-  // send packet
+  // Envia o pacote contendo o numero do contador
   LoRa.beginPacket();
-  
-
- /*  LoRa.setTxPower(20,20);
- * txPower -- 0 ~ 20
- * RFOUT_pin could be RF_PACONFIG_PASELECT_PABOOST or RF_PACONFIG_PASELECT_RFO
- *   - RF_PACONFIG_PASELECT_PABOOST -- LoRa single output via PABOOST, maximum output 20dBm
- *   - RF_PACONFIG_PASELECT_RFO     -- LoRa single output via RFO_HF / RFO_LF, maximum output 14dBm
-*/
- //LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
-  //LoRa.print("hello ");
   LoRa.print(counter);
   LoRa.endPacket(false);
+
+  
   if (counter == 0 ){//espera 5 segundos para começar a mandar o sinal
     Heltec.display->clear();
     Heltec.display->drawString(0, 0, "AGUARDE...");
     Heltec.display->display();
     delay(5000);
   }
-  if (counter >= 200){// para o programa
+  if (counter >= 200){// para o programa quando atingir 200 pacotes enviados
     Heltec.display->clear();
     Heltec.display->drawString(0, 0, "FIM DO TESTE");
     Heltec.display->display();
     while(1);
   }
+  
   counter++;
-  delay(50);                       // wait for a second
+  delay(50); //espera para enviar um novo pacote
 }
