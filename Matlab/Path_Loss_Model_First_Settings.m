@@ -66,11 +66,11 @@ PL_2_RAY=zeros(1,length(distance))
 dc=4*h_sender*h_receiver/lambda;
 for i=1:length(distance)
     if (distance(i)<h_sender)
-        PL_2_RAY (i) = 20-log10((((4*pi)^2)*pl*((distance(i))^2 + (h_sender/1000)^2))/(3*3*lambda^2));
+        PL_2_RAY (i) = -log10((((4*pi)^2)*pl*((distance(i))^2 + (h_sender/1000)^2))/(3*3*lambda^2));
     elseif (distance(i)<=dc)
-        PL_2_RAY (i) = 20-log10((((4*pi)^2)*pl*((distance(i))^2))/(3*3*lambda^2));
+        PL_2_RAY (i) = -log10((((4*pi)^2)*pl*((distance(i))^2))/(3*3*lambda^2));
     else
-        PL_2_RAY (i) = 20-log10(((distance(i))^4)*pl/(3*3*lambda^2*(h_sender/1000)^2*(h_receiver/1000)^2));
+        PL_2_RAY (i) = -log10(((distance(i))^4)*pl/(3*3*lambda^2*(h_sender/1000)^2*(h_receiver/1000)^2));
     end
 end
 % ********************************************************************** %
@@ -134,13 +134,13 @@ hold;
 %Curves
 figure(1);
 scatter(distance,RSSI_mean);
-legend('Measured');
+%legend('Measured');
 hold on;
 plot(distance,PL_FREE,'g',distance,PL_REG_COEF,'m',distance,LU,'y',distance,PL_2_RAY,'b',distance,PL_FITTING,'r');
-legend('Measured','Free Space','Regression Coefficient','Okumura-Hata','2-Ray','Linear Regression');
-title('Curves');
+legend('Coletados','Free Space','Log-Distance','Okumura-Hata','2-Ray','Regressão Linear');
+title('Curvas');
 ylabel('RSSI');
-xlabel('Distance in Meters');
+xlabel('Distancia (m)');
 
 saveas(figure(1),'Curvas_First_Settings.jpg');
 
@@ -161,8 +161,8 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-title('Accuracy');
-ylabel('Standard deviation');
+title('Precisão');
+ylabel('Desvio padrão');
 
 saveas(figure(2),'Precisão_First_Settings.jpg');
 
@@ -183,8 +183,8 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-title('Error');
-ylabel('Average Differenc');
+title('Erro Médio');
+ylabel('Diferença Média');
 
 saveas(figure(3),'Diferença_Media_First_Settings.jpg');
 
@@ -199,21 +199,21 @@ end
 
 bp = boxplot(vetor_box_plot,'Labels',{1,3,5,7,9,11,13,15,17,19});
 ylabel('RSSI');
-xlabel('Distance in Meters');
-title('Boxplot - First Settings Dates');
+xlabel('Distancia (m)');
+title('Boxplot - Primeira Coleta');
 
 saveas(figure(4),'Boxplot_First_Settings.jpg');
 
 %Corrected curves
 figure(5);
 scatter(distance,RSSI_mean);
-legend('Measured');
+%legend('Mensurados');
 hold on;
 plot(distance,Correct_free,'g',distance,Correct_rc,'m',distance,Correct_ok,'y',distance,Correct_2r,'b',distance,Correct_fitting,'r');
-legend('Measured','Free Space','Regression Coefficient','Okumura-Hata','2-Ray','Linear Regression');
-title('Corrected Curves');
+legend('Coletados','Free Space','Log-Distance','Okumura-Hata','2-Ray','Regressão Linear');
+title('Curvas Corrigidas');
 ylabel('RSSI');
-xlabel('Distance in Meters');
+xlabel('Distancia (m)');
 
 saveas(figure(5),'Corrected_Curvas_First_Settings.jpg');
 % ********************************************************************** %

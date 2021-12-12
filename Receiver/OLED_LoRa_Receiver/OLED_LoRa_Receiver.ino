@@ -3,7 +3,7 @@
 #include "heltec.h" 
 #include "images.h"
 
-#define BAND 433E6 //define a frequencia de banda da transmissão LoRa
+#define BAND 433E6 //define a frequencia de banda da transmissão LoRa em 433MHz
 
 String rssi = "RSSI --";
 String packSize = "--";
@@ -19,7 +19,7 @@ void LoRaData(){//mostra no display a tamanho do pacote recebido junto com o RSS
   Heltec.display->display();
 }
 
-void cbk(int packetSize) {//Lê o pacote recebi e extrai as informações de tamanho e RSSI
+void cbk(int packetSize) {//Lê o pacote recebido e extrai as informações de tamanho e RSSI
   packet ="";
   packSize = String(packetSize,DEC);
   for (int i = 0; i < packetSize; i++) { packet += (char) LoRa.read(); }
