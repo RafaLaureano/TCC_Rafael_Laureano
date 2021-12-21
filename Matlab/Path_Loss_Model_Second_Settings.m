@@ -103,7 +103,7 @@ mean_rc = mean(dif_rc);
 mean_fitting = mean(dif_fitting);
 mean_2r = mean(dif_2r);
 mean_ok = mean(dif_ok);
-mean = [mean_free mean_rc mean_fitting mean_ok mean_2r];
+mean_vector = [mean_free mean_rc mean_fitting mean_ok mean_2r];
 hold;
 
 %Calc Accuracy
@@ -122,7 +122,41 @@ Correct_fitting = PL_FITTING;
 Correct_2r = PL_2_RAY - mean_2r;
 Correct_ok = PL_OKUMURA_SUB_URBAN - mean_ok;
 Correct = [Correct_free Correct_rc Correct_fitting Correct_ok Correct_2r];
+
+% Creating error vectors
+dif_free_corrected = zeros(1,length(distance));
+dif_rc_corrected = zeros(1,length(distance));
+dif_fitting_corrected = zeros(1,length(distance));
+dif_2r_corrected = zeros(1,length(distance));
+dif_ok_corrected = zeros(1,length(distance));
+
+%measuring distance between measured values and calculated 
+for i=1:length(distance)
+    dif_free_corrected(i) = sqrt((RSSI_mean(i) - Correct_free(i))^2);
+    dif_rc_corrected(i) = sqrt((RSSI_mean(i) - Correct_rc(i))^2);
+    dif_fitting_corrected(i) = sqrt((RSSI_mean(i) - Correct_fitting(i))^2);
+    dif_2r_corrected(i) = sqrt((RSSI_mean(i) - Correct_2r(i))^2);
+    dif_ok_corrected(i) = sqrt((RSSI_mean(i) - Correct_ok(i))^2);
+end
+
+%Calc mean error
+mean_free_corrected = mean(dif_free_corrected);
+mean_rc_corrected = mean(dif_rc_corrected);
+mean_fitting_corrected = mean(dif_fitting_corrected);
+mean_2r_corrected = mean(dif_2r_corrected);
+mean_ok_corrected = mean(dif_ok_corrected);
+mean_corrected = [mean_free_corrected mean_rc_corrected mean_fitting_corrected mean_ok_corrected mean_2r_corrected];
 hold;
+
+%Calc Accuracy
+acc_free_corrected = std(dif_free_corrected);
+acc_rc_corrected = std(dif_rc_corrected);
+acc_fitting_corrected = std(dif_fitting_corrected);
+acc_2r_corrected = std(dif_2r_corrected);
+acc_ok_corrected = std(dif_ok_corrected);
+acc_corrected = [acc_free_corrected acc_rc_corrected acc_fitting_corrected acc_ok acc_2r_corrected];
+hold;
+
 % ********************************************************************** %
 
 
@@ -140,13 +174,13 @@ plot(distance,PL_FREE,'g',distance,PL_REG_COEF,'m',distance,LU,'y',distance,PL_2
 legend('Coletados','Free Space','Log-Distance','Okumura-Hata','2-Ray','Regressão Linear');
 title('Curvas');
 ylabel('RSSI');
-xlabel('Distancia (m)');
+xlabel('Distância (m)');
 
 saveas(figure(1),'Curvas_Second_Settings.jpg');
 
 %Accuracy
 figure(2);
-x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
+x = categorical({'Free Space','Log-Distance','Regressão Linear','Okumura-Hata','2-Ray'});
 b = bar(x,acc,'FaceColor','flat');
 
 xtips1 = b(1).XEndPoints;
@@ -161,15 +195,15 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-title('Precisão');
+title('');
 ylabel('Desvio padrão');
 
-saveas(figure(2),'Precisão_Second_Settings.jpg');
+saveas(figure(2),'Std_Second_Settings.jpg');
 
 %error
 figure(3);
-x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
-b = bar(x,mean,'FaceColor','flat');
+x = categorical({'Free Space','Log-Distance','Regressão Linear','Okumura-Hata','2-Ray'});
+b = bar(x,mean_vector,'FaceColor','flat');
 
 xtips1 = b(1).XEndPoints;
 ytips1 = b(1).YEndPoints;
@@ -183,8 +217,8 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-title('Erro Médio');
-ylabel('Diferença Média');
+title('');
+ylabel('Erro Médio');
 
 saveas(figure(3),'Diferença_Media_Second_Settings.jpg');
 
@@ -199,8 +233,8 @@ end
 
 bp = boxplot(vetor_box_plot,'Labels',{1,2,4,6,8,10,12,14,16,18,20,30,40,50,60,70,80,90,100});
 ylabel('RSSI');
-xlabel('Distancia (m)');
-title('Boxplot - Primeira Coleta');
+xlabel('Distância (m)');
+title('Boxplot - Segunda Coleta');
 
 saveas(figure(4),'Boxplot_Second_Settings.jpg');
 
@@ -213,7 +247,51 @@ plot(distance,Correct_free,'g',distance,Correct_rc,'m',distance,Correct_ok,'y',d
 legend('Coletados','Free Space','Log-Distance','Okumura-Hata','2-Ray','Regressão Linear');
 title('Curvas Corrigidas');
 ylabel('RSSI');
-xlabel('Distancia (m)');
+xlabel('Distância (m)');
 
 saveas(figure(5),'Corrected_Curvas_Second_Settings.jpg');
+
+%Accuracy corrected
+figure(6);
+x = categorical({'Free Space','Log-Distance','Regressão Linear','Okumura-Hata','2-Ray'});
+b = bar(x,acc_corrected,'FaceColor','flat');
+
+xtips1 = b(1).XEndPoints;
+ytips1 = b(1).YEndPoints;
+labels1 = string(b(1).YData);
+text(xtips1,ytips1,labels1,'HorizontalAlignment','center',...
+    'VerticalAlignment','bottom')
+
+b.CData(1,:) = [0 0 1];
+b.CData(2,:) = [0 1 0];
+b.CData(3,:) = [1 0 0];
+b.CData(4,:) = [1 1 0];
+b.CData(5,:) = [1 0 1];
+
+title('');
+ylabel('Desvio padrão');
+
+saveas(figure(6),'Std_Corrected_Second_Settings.jpg');
+
+%error corrected
+figure(7);
+x = categorical({'Free Space','Log-Distance','Regressão Linear','Okumura-Hata','2-Ray'});
+b = bar(x,mean_corrected,'FaceColor','flat');
+
+xtips1 = b(1).XEndPoints;
+ytips1 = b(1).YEndPoints;
+labels1 = string(b(1).YData);
+text(xtips1,ytips1,labels1,'HorizontalAlignment','center',...
+    'VerticalAlignment','bottom')
+
+b.CData(1,:) = [0 0 1];
+b.CData(2,:) = [0 1 0];
+b.CData(3,:) = [1 0 0];
+b.CData(4,:) = [1 1 0];
+b.CData(5,:) = [1 0 1];
+
+title('');
+ylabel('Erro Médio');
+
+saveas(figure(7),'Diferença_Media_Corrected_Second_Settings.jpg');
 % ********************************************************************** %
