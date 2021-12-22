@@ -171,7 +171,7 @@ scatter(distance,RSSI_mean);
 hold on;
 plot(distance,PL_FREE,'g',distance,PL_REG_COEF,'m',distance,LU,'y',distance,PL_2_RAY,'b',distance,PL_FITTING,'r');
 legend('Coletados','Free Space','Log-Distance','Okumura-Hata','2-Ray','Regressão Linear');
-title('Curvas');
+title('Curvas - Primeira coleta');
 ylabel('RSSI');
 xlabel('Distância (m)');
 
@@ -195,7 +195,7 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-title('');
+title('Desvio padrão das curvas originais - Primeira coleta');
 ylabel('Desvio padrão');
 
 saveas(figure(2),'Std_First_Settings.jpg');
@@ -218,7 +218,7 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-title('');
+title('Erro médio das curvas originais - Primeira coleta');
 ylabel('Erro Médio');
 
 saveas(figure(3),'Diferença_Media_First_Settings.jpg');
@@ -246,7 +246,7 @@ scatter(distance,RSSI_mean);
 hold on;
 plot(distance,Correct_free,'g',distance,Correct_rc,'m',distance,Correct_ok,'y',distance,Correct_2r,'b',distance,Correct_fitting,'r');
 legend('Coletados','Free Space','Log-Distance','Okumura-Hata','2-Ray','Regressão Linear');
-title('Curvas Corrigidas');
+title('Curvas Corrigidas - Primeira coleta');
 ylabel('RSSI');
 xlabel('Distância (m)');
 
@@ -269,7 +269,7 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-title('');
+title('Desvio padrão das curvas corrigidas - Primeira coleta');
 ylabel('Desvio padrão');
 
 saveas(figure(6),'Std_Corrected_First_Settings.jpg');
@@ -291,7 +291,7 @@ b.CData(3,:) = [1 0 0];
 b.CData(4,:) = [1 1 0];
 b.CData(5,:) = [1 0 1];
 
-title('');
+title('Erro médio das curvas corrigidas - Primeira coleta');
 ylabel('Erro Médio');
 
 saveas(figure(7),'Diferença_Media_Corrected_First_Settings.jpg');
