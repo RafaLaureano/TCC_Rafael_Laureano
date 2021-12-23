@@ -170,7 +170,7 @@ figure(1);
 scatter(distance,RSSI_mean);
 %legend('Measured');
 hold on;
-plot(distance,PL_FREE,'g',distance,PL_REG_COEF,'m',distance,LU,'y',distance,PL_2_RAY,'b',distance,PL_FITTING,'r');
+plot(distance,PL_FREE,'g',distance,PL_REG_COEF,'r',distance,LU,'y',distance,PL_2_RAY,'b',distance,PL_FITTING,'m');
 legend('Coletados','Free Space','Log-Distance','Okumura-Hata','2-Ray','Regressão Linear');
 title('Curvas - Terceira coleta');
 ylabel('RSSI');
@@ -180,7 +180,7 @@ saveas(figure(1),'Curvas_Third_Settings.jpg');
 
 %Accuracy
 figure(2);
-x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
+x = categorical({'Free Space','Log-Distance','Regressão Linear','Okumura-Hata','2-Ray'});
 b = bar(x,acc,'FaceColor','flat');
 
 xtips1 = b(1).XEndPoints;
@@ -202,7 +202,7 @@ saveas(figure(2),'Std_Third_Settings.jpg');
 
 %error
 figure(3);
-x = categorical({'Free Space','Regression Coefficient','Linear Regression','Okumura-Hata','2-Ray'});
+x = categorical({'Free Space','Log-Distance','Regressão Linear','Okumura-Hata','2-Ray'});
 b = bar(x,mean_vector,'FaceColor','flat');
 
 xtips1 = b(1).XEndPoints;
@@ -243,7 +243,7 @@ figure(5);
 scatter(distance,RSSI_mean);
 %legend('Mensurados');
 hold on;
-plot(distance,Correct_free,'g',distance,Correct_rc,'m',distance,Correct_ok,'y',distance,Correct_2r,'b',distance,Correct_fitting,'r');
+plot(distance,Correct_free,'g',distance,Correct_rc,'r',distance,Correct_ok,'y',distance,Correct_2r,'b',distance,Correct_fitting,'m');
 legend('Coletados','Free Space','Log-Distance','Okumura-Hata','2-Ray','Regressão Linear');
 title('Curvas Corrigidas- Terceira coleta');
 ylabel('RSSI');
